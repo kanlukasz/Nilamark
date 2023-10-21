@@ -1,0 +1,210 @@
+body {
+    background-color: #191c1f;
+    color: rgb(239, 240, 241);
+    font-family: sans-serif;
+    max-width: 1400px;
+    margin: auto;
+    padding: 0px 20px;
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+h2 {
+    margin-top: 0px;
+}
+
+h3 {
+    text-align: center;
+    margin-top: 0px;
+}
+
+a {
+    color: rgb(239, 240, 241);
+    text-decoration: none;
+    display: block;
+}
+
+.result {
+    border-bottom: 1px solid rgb(103, 107, 110);
+    padding: 10px 5px;
+    position: relative;
+}
+
+.result:hover {
+    background-color: #474e55;
+}
+
+.result .result-link::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.edit-button {
+    position: absolute;
+    top: 00px;
+    right: 00px;
+    padding: 10px;
+}
+
+.edit-button:hover {
+    filter: invert(100%);
+}
+
+.edit-button > img {
+    height: 20px;
+}
+
+.entry-icon {
+    float: left;
+    padding-right: 8px;
+    margin-top: -3px;
+    height: 24px;
+    width: 24px;
+    object-fit: cover;
+}
+
+.add-button {
+    position: absolute;
+    top: 14px;
+    right: 11px;
+    padding: 12px;
+}
+
+.add-button:hover {
+    filter: invert(100%);
+}
+
+.result-set {
+    padding: 20px 15px;
+    background-color: rgb(49, 54, 59);
+    border-radius: 5px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.result-set > h2 {
+    padding: 0px 5px;
+}
+
+#navbar {
+    background-color: #44679f;
+    margin-top: 0px;
+    justify-content: left;
+    display: flex;
+    border-radius: 0px 0px 5px 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+#navbar > a, #navbar > a > h1 {
+    margin-top: 0px;
+}
+
+#navbar > a {
+    display: inline-block;
+    margin-bottom: 0px;
+    padding: 0px 5px;
+    height: 40px;
+    line-height: 38px;
+}
+
+#navbar > a:hover {
+    background-color: #7997c8;
+}
+
+.nav-entry {
+    width: 50px;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.2em;
+    margin: 0px 5px;
+}
+
+input[type=text], input[type=password], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button[type=submit] {
+  width: 100%;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #4CAF50;
+}
+
+button[type=submit]:hover {
+  background-color: #45a049;
+}
+
+#delete {
+  background-color: #af4e4c;
+  width: 50%;
+  margin-left: 25%;
+}
+    }
+
+#delete:hover {
+    background-color: #954241;
+}
+
+button[type=submit] > span, button[type=submit] > img {
+  vertical-align: middle;
+}
+
+button[type=submit] > img {
+  margin-right: 5px;
+}
+
+button[type=submit] > span {
+  font-size: 16px;
+}
+
+#breadcrumbs {
+    margin: 5px 0px 10px 0px;
+}
+
+#breadcrumbs > a {
+    display: inline;
+    padding-top: 5px;
+    border-bottom: 2px dotted;
+    padding-bottom: 2px;
+}
+
+#breadcrumbs > img {
+    vertical-align: middle;
+}
+
+.login-title {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-form {
+    max-width: 500px;
+    margin: auto;
+}
+
+.footer {
+    text-align: center;
+}
+
+.footer-link {
+    display: inline;
+}
