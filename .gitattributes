@@ -1,0 +1,3 @@
+# Classify .php files as PHP so GitHub doesn't detect them as Hack lang
+# Ref: https://github.com/github-linguist/linguist/issues/4229
+*.php linguist-language=PHP
