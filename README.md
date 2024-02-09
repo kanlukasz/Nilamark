@@ -8,7 +8,7 @@ The app is still in alpha; the database must be created manually.
 
 ## Supporting development
 
-If you find this bookmark manager useful, you can support development by joining the Nerd Club at [https://nerdclub.nots.co](nerdclub.nots.co).
+If you find this bookmark manager useful, you can support development by joining the Nerd Club at [nerdclub.nots.co](https://nerdclub.nots.co).
 
 ## License
 
