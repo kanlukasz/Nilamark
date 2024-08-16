@@ -4,7 +4,7 @@
  require_once "./nilacon.php";
  
  if(!isset($_SESSION['loggedin'])){
-    header("Location: ./login.php");
+    header("Location: ./login.php?location=" . urlencode($_SERVER['REQUEST_URI']));
     exit;
  }
  
@@ -15,6 +15,8 @@
     <title>Browse - Nilamark</title>    
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.svg">
+    <link rel="manifest" href="pwa-manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
     <?php include 'header.php'; ?>
@@ -126,6 +128,9 @@
                 echo "<a class='result-link' href='./bookmarks.php?folder=" . $row["id"] . "'>" . htmlspecialchars($row["title"]) . "</a>";
                 echo "<a href=./edit-folder.php?folder=" . $row["id"] . "><span class='edit-button'><img src='./assets/edit.svg'/></span></a></div>";
             }
+            echo "<div class='result'>";
+            echo "<a class='result-link' href='./create-folder.php?parent=" . $current_folder_id . "'>" . "Add new folder..." . "</a>";
+            echo "<a href='./create-folder.php?parent=" . $current_folder_id . "' class='edit-button'><img src='./assets/add-circle.svg' /></a></div>";
         } else {
             echo "0 folders";
         }
@@ -164,6 +169,9 @@
                 echo "<a class='result-link' href='" . $row["url"] . "'>" . htmlspecialchars($row["title"]) . "</a>";
                 echo "<a href=./edit-bookmark.php?bookmark=" . $row["id"] . "><span class='edit-button'><img src='./assets/edit.svg'/></span></a></div>";
             }
+            echo "<div class='result'>";
+            echo "<a class='result-link' href='./add.php?parent=" . $current_folder_id . "'>" . "Add new bookmark..." . "</a>";
+            echo "<a href='./add.php?parent=" . $current_folder_id . "' class='edit-button'><img src='./assets/add-circle.svg' /></a></div>";
         } else {
             echo "0 bookmarks";
         }

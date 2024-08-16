@@ -14,6 +14,7 @@
     <title>Home - Nilamark</title>    
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
     <?php include 'header.php'; ?>

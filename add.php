@@ -14,6 +14,7 @@
     <title>Home - Nilamark</title>    
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
     <?php include 'header.php'; ?>
@@ -53,24 +54,39 @@
         $url = $_POST['url'];
         $title = $_POST['title'];
         $folder = $_POST['folder'];
-        
+
+        $sql_existing = $pdo->prepare("SELECT url FROM nm_bookmarks");
+        $sql_existing->execute();
+        $existing_bookmarks_raw = $sql_existing->fetchAll();
+        $existing_bookmarks = array_map(function($piece){
+            return (string) $piece;
+        }, $existing_bookmarks_raw);
+
             if (empty($url) | empty($title) | empty($folder)) {
                 echo "Missing parameters.";
             } else {
-                $sql1 = $pdo->prepare("INSERT INTO nm_bookmarks (url, title, added, lastmodified) VALUES (:url, :title, :timestamp1, :timestamp2)");
-                $sql1->bindParam(":url", $url, PDO::PARAM_STR);
-                $sql1->bindParam(":title", $title, PDO::PARAM_STR);
-                $sql1->bindParam(":timestamp1", time(), PDO::PARAM_STR);
-                $sql1->bindParam(":timestamp2", time(), PDO::PARAM_STR);
-                $sql1->execute();
-                $new_id = $pdo->lastInsertId();
-                
-                $sql2 = $pdo->prepare("INSERT INTO nm_tree VALUES ('bookmark', :id, :parent_folder, 0)");
-                $sql2->bindParam(":id", $new_id, PDO::PARAM_STR);
-                $sql2->bindParam(":parent_folder", $folder, PDO::PARAM_STR);
-                $sql2->execute();
-                
-                redirect("./bookmarks.php?folder=" . $folder);
+                $sql_check_existing = $pdo->prepare("SELECT url FROM nm_bookmarks WHERE url = :url");
+                $sql_check_existing->bindParam(':url', $url);
+                $sql_check_existing->execute();
+                $existing_bookmark = $sql_check_existing->fetch(PDO::FETCH_ASSOC);
+                if ( !$existing_bookmark) {
+                    $sql1 = $pdo->prepare("INSERT INTO nm_bookmarks (url, title, added, lastmodified) VALUES (:url, :title, :timestamp1, :timestamp2)");
+                    $sql1->bindParam(":url", $url, PDO::PARAM_STR);
+                    $sql1->bindParam(":title", $title, PDO::PARAM_STR);
+                    $sql1->bindParam(":timestamp1", time(), PDO::PARAM_STR);
+                    $sql1->bindParam(":timestamp2", time(), PDO::PARAM_STR);
+                    $sql1->execute();
+                    $new_id = $pdo->lastInsertId();
+
+                    $sql2 = $pdo->prepare("INSERT INTO nm_tree VALUES ('bookmark', :id, :parent_folder, 0)");
+                    $sql2->bindParam(":id", $new_id, PDO::PARAM_STR);
+                    $sql2->bindParam(":parent_folder", $folder, PDO::PARAM_STR);
+                    $sql2->execute();
+
+                    redirect("./bookmarks.php?folder=" . $folder);
+                } else {
+                    echo "This URL is already bookmarked!";
+                }
             }
         }
     ?>

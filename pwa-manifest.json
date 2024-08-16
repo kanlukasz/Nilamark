@@ -1,0 +1,17 @@
+{
+    "name": "Nilamark",
+    "short_name": "Nilamark",
+    "theme_color": "#44679f",
+    "background_color": "#191c1f",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "https://nilamark.cloud.kauffmann.tech/",
+    "description": "Bookmark manager with nested folder support",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "https://nilamark.cloud.kauffmann.tech/assets/bookmarks.svg",
+            "sizes": "1024x1024"
+        }
+    ]
+}

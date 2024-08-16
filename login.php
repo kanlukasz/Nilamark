@@ -2,7 +2,13 @@
  // Global database/session initialization.
  require_once "./config.php";
  require_once "./cookies.php";
- 
+
+ // Check if we have a location to return to after logging in.
+ $redirect = NULL;
+ if($_GET['location'] != '') {
+  $redirect = $_GET['location'];
+ }
+
  // If we're already logged in, redirect back to the homepage.
  if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
   header("location: ./bookmarks.php?folder=1");
@@ -25,8 +31,12 @@
       $_SESSION["username"] = $row["username"];
       $_SESSION["admin"] = $row["admin"];
 
-      // Send us back to the home page.
-      header("location: bookmarks.php?folder=1");
+      // If we have a redirect URL, go there.
+      if($redirect) {
+       header("location:" . $redirect);
+      } else { // Otherwise, go back to the home page.
+       header("location: bookmarks.php?folder=1");
+      }
      }
     }
    }

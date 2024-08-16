@@ -45,18 +45,25 @@ a {
   left: 0;
 }
 
-.edit-button {
+.edit-button, .folder-button {
     position: absolute;
     top: 00px;
-    right: 00px;
     padding: 10px;
 }
 
-.edit-button:hover {
+.edit-button {
+    right: 00px;
+}
+
+.folder-button {
+    right: 30px;
+}
+
+.edit-button:hover, .folder-button:hover {
     filter: invert(100%);
 }
 
-.edit-button > img {
+.edit-button > img, .folder-button > img {
     height: 20px;
 }
 
@@ -100,6 +107,26 @@ a {
     border-radius: 0px 0px 5px 10px;
     overflow: hidden;
     margin-bottom: 10px;
+}
+
+#navbar > a:last-child {
+    margin-left: auto;
+}
+
+@media screen and (max-width: 730px) {
+    #navbar {
+        display: block;
+    }
+
+    #navbar > a {
+        width: 100%;
+        border-bottom: 1px solid rgb(199, 205, 209);
+        text-align: center;
+    }
+
+    #navbar > a:last-child {
+        border: none;
+    }
 }
 
 #navbar > a, #navbar > a > h1 {
@@ -207,4 +234,8 @@ button[type=submit] > span {
 
 .footer-link {
     display: inline;
+}
+
+#bookmark-list {
+    word-wrap: break-word;
 }
