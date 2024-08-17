@@ -5,6 +5,10 @@
 
 class Search{
     public function product($pdo) {
+        if($_POST['searchQuery'] == null) {
+            return;
+        }
+
 	$limit = '100';
 	$page = 1;
 	if($_POST['page'] > 1) {
@@ -14,35 +18,51 @@ class Search{
 	  $start = 0;
 	}
 
-	$sqlQuery = "SELECT * FROM nm_bookmarks INNER JOIN nm_tree ON nm_bookmarks.id = nm_tree.id";
-	if($_POST['searchQuery'] != ''){
-	  $sqlQuery .= ' WHERE LOWER(title) LIKE LOWER("%'.str_replace(' ', '%', $_POST['searchQuery']).'%") ';
-	}
-	$sqlQuery .= ' ORDER BY nm_bookmarks.id ASC';
+        $sql_query_getall = "SELECT nm_bookmarks.id, title, url, parent_folder FROM nm_bookmarks INNER JOIN nm_tree ON nm_bookmarks.id = nm_tree.id WHERE type = 'bookmark' ORDER BY nm_bookmarks.id ASC";
+        $sql_statement_getall = $pdo->prepare($sql_query_getall);
+        $sql_statement_getall->execute();
 
-	$filter_query = $sqlQuery . ' LIMIT '.$start.', '.$limit.'';
+        $result_all = $sql_statement_getall->fetchAll();
 
-	//$statement = $this->conn->prepare($sqlQuery);
-        $statement = $pdo->prepare($sqlQuery);
-	$statement->execute();
+        foreach ($result_all as $key => $result) {
+            if (preg_match("/^(0|[1-9][0-9]*)(0|[1-9][0-9]*)(0|[1-9][0-9]*) - .*$/", $result['title'])) {
+                $result_all[$key]['title'] = substr($result['title'], 6);
+            }
+        }
 
-	//$result = $statement->get_result();
-        $result = $statement->fetchAll();
-	$totalSearchResults = count($result);
+        function sort_compare($a, $b) {
+          $value_a = similar_text(strtolower($_POST['searchQuery']), strtolower($a['title']), $percent_a);
+          $value_b = similar_text(strtolower($_POST['searchQuery']), strtolower($b['title']), $percent_b);
+          // Sort by value first, then by percentage.
+          // Future idea: use Levenshtein distance as the second or third step.
+          if($value_a < $value_b)return 1;
+          else if($value_a > $value_b)return -1;
+          else if($percent_a < $percent_b)return 1;
+          else if($percent_a > $percent_b)return -1;
+          else return 0;
+        }
+        usort($result_all, "sort_compare");
 
-	//$statement = $this->conn->prepare($filter_query);
-        $statement = $pdo->prepare($filter_query);
-	$statement->execute();
+        echo '<div class="result-set"><h2>Search results:</h2>';
 
-	//$result = $statement->get_result();
-        $result = $statement->fetchAll();
-	$total_filter_data = count($result);
+        for ($looprow = 0; $looprow <= 9; $looprow ++) {
+         $row = $result_all[$looprow];
+         $favicon_url = get_favicon($row["url"]);
+            echo "<div class='result'>
+                    <img src='". $favicon_url ."' class='entry-icon'>
+                    <a class='result-link' href='" . $row["url"] . "'>" . htmlspecialchars($row["title"]) . "</a>
+                    <a href='./bookmarks.php?folder=" . $row["parent_folder"] . "'><span class='folder-button'><img src='./assets/folder.svg'/></span></a>
+                    <a href='./edit-bookmark.php?bookmark=" . $row["id"] . "'><span class='edit-button'><img src='./assets/edit.svg'/></span></a>
+                  </div>";
+          }
+
+        /*
 
 	$resultHTML = '
 		<div class="result-set">
                  <h2>Search results: '.$totalSearchResults.'</h2>';
 
-	if($totalSearchResults > 0) {	  
+	if($totalSearchResults > 0) {
           foreach ($result as $row) {
             $favicon_url = get_favicon($row["url"]);
             $resultHTML .= "
@@ -60,95 +80,7 @@ class Search{
 	  </tr>';
 	}
 
-        /*
-	$resultHTML .= '
-	</div>
-	<br />
-	<div align="center">
-	  <ul class="pagination">';
-
-	$totalLinks = ceil($totalSearchResults/$limit);
-	$previousLink = '';
-	$nextLink = '';
-	$pageLink = '';	
-
-	if($totalLinks > 4){
-	  if($page < 5){
-		for($count = 1; $count <= 5; $count++){
-		  $pageData[] = $count;
-		}
-		$pageData[] = '...';
-		$pageData[] = $totalLinks;
-	  } else {
-		$endLimit = $totalLinks - 5;
-		if($page > $endLimit){
-		  $pageData[] = 1;
-		  $pageData[] = '...';
-		  for($count = $endLimit; $count <= $totalLinks; $count++)
-		  {
-			$pageData[] = $count;
-		  }
-		} else {
-		  $pageData[] = 1;
-		  $pageData[] = '...';
-		  for($count = $page - 1; $count <= $page + 1; $count++)
-		  {
-			$pageData[] = $count;
-		  }
-		  $pageData[] = '...';
-		  $pageData[] = $totalLinks;
-		}
-	  }
-	} else if($totalLinks > 0){
-	  for($count = 1; $count <= $totalLinks; $count++) {
-		$pageData[] = $count;
-	  }
-	} else {
-          $pageData[] = 0;
-        }
-
-	for($count = 0; $count < count($pageData); $count++){
-	  if($page == $pageData[$count]){
-		$pageLink .= '
-		<li class="page-item active">
-		  <a class="page-link" href="#">'.$pageData[$count].' <span class="sr-only">(current)</span></a>
-		</li>';
-
-		$previousData = $pageData[$count] - 1;
-		if($previousData > 0){
-		  $previousLink = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$previousData.'">Previous</a></li>';
-		} else {
-		  $previousLink = '
-		  <li class="page-item disabled">
-			<a class="page-link" href="#">Previous</a>
-		  </li>';
-		}
-		$nextData = $pageData[$count] + 1;
-		if($nextData > $totalLinks){
-		  $nextLink = '
-		  <li class="page-item disabled">
-			<a class="page-link" href="#">Next</a>
-		  </li>';
-		} else {
-		  $nextLink = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$nextData.'">Next</a></li>';
-		}
-	  } else {
-		if($pageData[$count] == '...'){
-		  $pageLink .= '
-		  <li class="page-item disabled">
-			  <a class="page-link" href="#">...</a>
-		  </li>';
-		} else {
-		  $pageLink .= '
-		  <li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$pageData[$count].'">'.$pageData[$count].'</a></li>';
-		}
-	  }
-	}
-
-	$resultHTML .= $previousLink . $pageLink . $nextLink;
-	$resultHTML .= '</ul></div>';
-        */
-	echo $resultHTML;
+	echo $resultHTML; */
 }
 }
 

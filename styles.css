@@ -103,7 +103,6 @@ a {
     background-color: #44679f;
     margin-top: 0px;
     justify-content: left;
-    display: flex;
     border-radius: 0px 0px 5px 10px;
     overflow: hidden;
     margin-bottom: 10px;
@@ -113,19 +112,34 @@ a {
     margin-left: auto;
 }
 
-@media screen and (max-width: 730px) {
+#navbar {
+    display: block;
+}
+
+#navbar > a {
+    width: 100%;
+    border-bottom: 1px solid rgb(199, 205, 209);
+    text-align: center;
+}
+
+#navbar > a:last-child {
+    border: none;
+}
+
+
+@media screen and (min-width: 730px) {
     #navbar {
-        display: block;
+        display: flex;
     }
 
     #navbar > a {
-        width: 100%;
-        border-bottom: 1px solid rgb(199, 205, 209);
-        text-align: center;
+        width: unset;
+        border-bottom: unset;
+        text-align: unset;
     }
 
     #navbar > a:last-child {
-        border: none;
+        border: unset;
     }
 }
 
@@ -238,4 +252,8 @@ button[type=submit] > span {
 
 #bookmark-list {
     word-wrap: break-word;
+}
+
+#searchResult > .result-set > .result {
+    padding-right: 65px;
 }

@@ -21,12 +21,20 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
+     function delay(fn, ms) {
+      let timer = 0
+      return function(...args) {
+       clearTimeout(timer)
+       timer = setTimeout(fn.bind(this, ...args), ms || 0)
+      }
+     }
+
      $(document).ready(function(){
-      $('#search').keyup(function(){
+      $('#search').keyup(delay(function(){
        var searchQuery = $('#search').val();
        searchData(1, searchQuery);
        console.log("searched");
-      });
+      }, 250));
      });
 
      function searchData(page, searchQuery = '') {
